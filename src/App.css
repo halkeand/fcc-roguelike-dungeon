@@ -26,27 +26,41 @@ body {
 
 .room {
   background-color:  #34295c;
-
   opacity: 1;
   animation-name: palyer-trace-passage;
   animation-duration: .3s;
 }
 
+.ennemy {
+  background-color: red;
+}
+
+.health-item {
+  background-color: green;
+}
+
+.weapon {
+  background-color: yellow;
+}
+/* Player */
 .player {
   position: relative;
-
   background-image: linear-gradient(to top left, coral, purple);
 }
+
 .player::before {
   content: '';
   position: absolute;
-  top: -500px;
-  left: -500px;
-  height: 1000px;
-  width: 1000px;
+  top: -750px;
+  left: -750px;
+  height: 1500px;
+  width: 1500px;
   background-image: radial-gradient(transparent 0%, #36295c 10%, #34295c 40%)
 }
 
+.animated-span {
+  display: inline-block;
+}
 @keyframes palyer-trace-passage {
   from{
     background-color: purple;

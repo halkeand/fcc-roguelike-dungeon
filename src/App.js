@@ -4,6 +4,9 @@ import ArrowKeysReact from 'arrow-keys-react'
 
 //Components
 import GameBoard from './components/GameBoard'
+import PlayerInfos from './components/PlayerInfos'
+
+import Player from './objects/player-obj'
 //Utils
 import initGameMap from './utils/init-game-map'
 import getRandomPosition from './utils/get-random-position'
@@ -33,8 +36,9 @@ class App extends Component {
       });
 
     this.state = {
+      isGameOver: false,
       gameMap: initGameMap(),
-      player: null
+      player: new Player()
     }
   }
 
@@ -43,8 +47,9 @@ class App extends Component {
     this.setState(state => {
       const playerPosition = getRandomPosition(state.gameMap)
       return {
-        gameMap: populateGameMap(state.gameMap, playerPosition),
+        gameMap: populateGameMap(state.player, state.gameMap, playerPosition),
         player: {
+          ...state.player,
           playerPosition
         }
       }
@@ -52,9 +57,10 @@ class App extends Component {
   }
 
   render() {
-    const { gameMap } = this.state
+    const { gameMap, player } = this.state
     return (
       <div className="App" {...ArrowKeysReact.events} tabIndex="1">
+        <PlayerInfos {...player}/>
         <GameBoard gameMap={gameMap}/>
       </div>
     );

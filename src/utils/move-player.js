@@ -1,17 +1,99 @@
 import { setPlayerOnMap } from './populate-game-map'
-import { isCellEmpty, getCellPosition, getCellValue } from './divers'
+import { getCellPosition, getCellValue } from './cells-functions'
+
+import { doDamage } from '../objects/player-obj'
 
 function movePlayer (direction, thisContext) {
   const { player, gameMap } = thisContext.state
   const cellPos = getCellPosition(direction, player.playerPosition)
   const cellValue = getCellValue(cellPos, gameMap)
-  return isCellEmpty(cellValue) && thisContext.setState(state => ({
-    gameMap: setPlayerOnMap(state.gameMap, cellPos, player.playerPosition),
-    player: {
-      ...state.player,
-      playerPosition: cellPos
+
+  const moveFromOneCase = () => {
+    thisContext.setState(prevState => ({
+      gameMap: setPlayerOnMap(prevState.player, prevState.gameMap, cellPos, player.playerPosition),
+      player: {
+        ...prevState.player,
+        playerPosition: cellPos
+      }
+    }))
+  }
+
+  const accumulateXp = () => {
+    thisContext.setState(prevState => ({
+      player: {
+        ...prevState.player,
+        xp: prevState.player.xp += cellValue.getRewardXp()
+      }
+    }))
+  }
+
+  const decreasePlayerHealth = () => {
+    thisContext.setState(prevState => ({
+      player: {
+        ...prevState.player,
+        health: prevState.player.health - cellValue.doDamage()
+      }
+    }))
+  }
+
+  const increasePlayerHealth = () => {
+    thisContext.setState(prevState => ({
+      player: {
+        ...prevState.player,
+        health: prevState.player.health + cellValue.healthAmt()
+      }
+    }))
+  }
+
+  const setGameOver = () => {
+    thisContext.setState(prevState => ({
+      isGameOver: true
+    }))
+  }
+
+  const setNewPlayerWeapon = () => {
+    thisContext.setState(prevState => ({
+      player : {
+        ...prevState.player,
+        weapon: cellValue
+      }
+    }))
+  }
+
+  const accumulateXpAndMoveFromOneCase = () => {
+    accumulateXp()
+    moveFromOneCase()
+  }
+  if (typeof cellValue === 'number') {
+    //Switch for empty cell or wall
+    switch (cellValue) {
+      case 0:
+        moveFromOneCase()
+        break;
+      case 1:
+        break;
+        default: break;
     }
-  }))
+  } else {
+    //Switch for healthItem, weapon or ennemy
+    switch (cellValue.type) {
+      case 'ennemy':
+        cellValue.decreaseHealth(doDamage(player))
+        player.health < 0 ? setGameOver() :
+        cellValue.isAlive() ? decreasePlayerHealth() :
+        accumulateXpAndMoveFromOneCase()
+        break;
+      case 'healthItem':
+        increasePlayerHealth()
+        moveFromOneCase()
+        break;
+      case 'weapon':
+        setNewPlayerWeapon()
+        moveFromOneCase()
+        break;
+      default: break;
+    }
+  }
 }
 
 export default movePlayer

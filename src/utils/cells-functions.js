@@ -1,5 +1,3 @@
-export const isCellEmpty = val => val === 0 ? true : false
-
 export const getCellValue = (position, map) => map[position.row][position.cell]
 
 export const getCellPosition = (direction, pos) => {

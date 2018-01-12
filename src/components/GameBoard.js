@@ -12,23 +12,21 @@ class UniqueCell extends Component {
         className={
           cellValue === 1 ? 'wall' :
           cellValue === 0 ? 'room' :
-          cellValue === 'player' ? 'player' : null
+          cellValue.type === 'player' ? 'player' :
+          cellValue.type === 'healthItem' ? 'health-item' :
+          cellValue.type === 'ennemy' ? 'ennemy' :
+          cellValue.type === 'weapon' ? 'weapon' : null
         }>
       </td>
     )
   }
 }
 
-class Cells extends Component {
-
-  render() {
-    return (
-      this.props.row.map((cellValue, cellIndex) =>
-        <UniqueCell cellValue={cellValue} key={cellIndex}/>
-      )
-    )
-  }
-}
+const Cells = ({ row }) => (
+  row.map((cellValue, cellIndex) =>
+    <UniqueCell cellValue={cellValue} key={cellIndex}/>
+  )
+)
 
 const Rows = ({ gameMap }) => (
   gameMap.map((row,rowIndex) =>

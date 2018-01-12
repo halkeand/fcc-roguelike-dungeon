@@ -1,3 +1,11 @@
+export const randomizeBtw = (val, min, max) => {
+  const coeff = Math.random() * (max - min) + min
+  return Math.round(val * coeff)
+}
+
+//Return rounded integer between min and max values
+export const getRandIntBtw = (min, max) => Math.round(min + (Math.random() * (max - min)))
+
 const randInt = (max, min = 0) => {
   return Math.round((Math.random() * (max - min)) + min);
 }
