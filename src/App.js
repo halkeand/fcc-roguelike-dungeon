@@ -7,6 +7,7 @@ import GameBoard from './components/GameBoard'
 import PlayerInfos from './components/PlayerInfos'
 import Modal from './components/Modal'
 import Legends from './components/Legends'
+import Footer from './components/Footer'
 
 import Player from './objects/player-obj'
 //Utils
@@ -86,6 +87,7 @@ class App extends Component {
           /> : null
         }
         <Legends></Legends>
+        <Footer gitUrl="https://github.com/halkeand/fcc-roguelike-dungeon"></Footer>
       </div>
     );
   }
