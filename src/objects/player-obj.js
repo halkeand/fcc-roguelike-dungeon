@@ -8,10 +8,6 @@ export default function Player(health = 100, xp = 0, weapon = new Weapon()) {
   this.weapon = weapon
   this.xp = xp
   this.isAlive = () => this.health > 0 ? true : false
-
-  this.changeXp = xpChangeAmt => this.xp += xpChangeAmt
-  this.changeWeapon = newWeapon => this.weapon = newWeapon
-  this.resetXp = () => this.xp = 0
 }
 
 export const doDamage = player => {

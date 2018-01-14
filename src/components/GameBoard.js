@@ -38,7 +38,7 @@ const Rows = ({ gameMap }) => (
 
 const Game = ({ gameMap }) => {
   return (
-    <div className="gameboard-container">
+    <div className="gameboard-container animated jello">
         <table className="board">
           <tbody>
             <Rows gameMap={gameMap}/>

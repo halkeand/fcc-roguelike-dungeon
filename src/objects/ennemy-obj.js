@@ -3,8 +3,8 @@ import { getRandIntBtw, randomizeBtw } from '../utils/get-random-position'
 export default function Ennemy(isBoss = false) {
   this.type = 'ennemy'
   this.isBoss = isBoss
-  this.health = this.isBoss ? 120 : 80
-  this.level = this.isBoss ? 4 : 3
+  this.health = this.isBoss ? 140 : 100
+  this.level = this.isBoss ? 5 : 4
 
   this.doDamage = () => {
     const bruteAttack = this.isBoss ? this.level * 5 : this.level * 3

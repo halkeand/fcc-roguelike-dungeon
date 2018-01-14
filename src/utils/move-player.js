@@ -4,7 +4,7 @@ import { getCellPosition, getCellValue } from './cells-functions'
 import { doDamage } from '../objects/player-obj'
 
 function movePlayer (direction, thisContext) {
-  const { player, gameMap } = thisContext.state
+  const { player, gameMap, isGameOver, isGameFinished } = thisContext.state
   const cellPos = getCellPosition(direction, player.playerPosition)
   const cellValue = getCellValue(cellPos, gameMap)
 
@@ -60,11 +60,25 @@ function movePlayer (direction, thisContext) {
     }))
   }
 
+  const setAlivesEnnemys = () => {
+    thisContext.setState(state => {
+      if(state.alivesEnnemys === 1) {
+        return {
+            alivesEnnemys: state.alivesEnnemys - 1,
+            isGameFinished: true
+        }
+      }
+      return {
+        alivesEnnemys: state.alivesEnnemys - 1
+      }
+    })
+  }
   const accumulateXpAndMoveFromOneCase = () => {
     accumulateXp()
     moveFromOneCase()
+    setAlivesEnnemys()
   }
-  if (typeof cellValue === 'number') {
+  if (typeof cellValue === 'number' && !(isGameOver || isGameFinished)) {
     //Switch for empty cell or wall
     switch (cellValue) {
       case 0:
@@ -74,12 +88,12 @@ function movePlayer (direction, thisContext) {
         break;
         default: break;
     }
-  } else {
+  } else if(!(isGameOver || isGameFinished)) {
     //Switch for healthItem, weapon or ennemy
     switch (cellValue.type) {
       case 'ennemy':
         cellValue.decreaseHealth(doDamage(player))
-        player.health < 0 ? setGameOver() :
+        player.health <= 0 ? setGameOver() :
         cellValue.isAlive() ? decreasePlayerHealth() :
         accumulateXpAndMoveFromOneCase()
         break;

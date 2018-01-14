@@ -5,6 +5,8 @@ import ArrowKeysReact from 'arrow-keys-react'
 //Components
 import GameBoard from './components/GameBoard'
 import PlayerInfos from './components/PlayerInfos'
+import Modal from './components/Modal'
+import Legends from './components/Legends'
 
 import Player from './objects/player-obj'
 //Utils
@@ -35,33 +37,55 @@ class App extends Component {
         }
       });
 
-    this.state = {
-      isGameOver: false,
-      gameMap: initGameMap(),
-      player: new Player()
+    this.state = this.initState()
+  }
+
+  initState = () => {
+    return {
+        alivesEnnemys: 8,
+        isGameOver: false,
+        isGameFinished: false,
+        gameMap: initGameMap(),
+        player: new Player()
     }
+  }
+
+  populateState = state => {
+    const playerPosition = getRandomPosition(state.gameMap)
+    return {
+      gameMap: populateGameMap(state.player, state.gameMap, playerPosition),
+      player: {
+        ...state.player,
+        playerPosition
+      }
+    }
+  }
+
+  handleNewParty = () => {
+    this.setState(state => this.initState())
+    this.setState(state => this.populateState(state))
   }
 
   componentDidMount() {
     // Place player, health and ennemies on map
-    this.setState(state => {
-      const playerPosition = getRandomPosition(state.gameMap)
-      return {
-        gameMap: populateGameMap(state.player, state.gameMap, playerPosition),
-        player: {
-          ...state.player,
-          playerPosition
-        }
-      }
-    })
+    this.setState(state => this.populateState(state))
   }
 
   render() {
-    const { gameMap, player } = this.state
+    const { gameMap, player, isGameOver, isGameFinished } = this.state
     return (
       <div className="App" {...ArrowKeysReact.events} tabIndex="1">
+        <h1>Roguelike Dungeon Crowler Game</h1>
         <PlayerInfos {...player}/>
         <GameBoard gameMap={gameMap}/>
+        { isGameFinished || isGameOver ?
+          <Modal
+            handleNewParty={this.handleNewParty}
+            isGameFinished={isGameFinished}
+            isGameOver={isGameOver}
+          /> : null
+        }
+        <Legends></Legends>
       </div>
     );
   }
